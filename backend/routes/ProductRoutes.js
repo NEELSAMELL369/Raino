@@ -1,25 +1,26 @@
 import express from "express";
-import cors from "cors";
-import productsRoutes from "./routes/products.js";
+import {
+  getDepartments,
+  getCategoriesByDepartment,
+  getProductsByCategory,
+  getProductById,
+} from "../controllers/productController.js";
 
-const app = express();
+const router = express.Router();
 
-// Enable CORS for all origins
-app.use(cors());
+// Get all departments
+router.get("/departments", getDepartments);
 
-// Parse JSON requests
-app.use(express.json());
+// Get categories by department
+router.get("/departments/:department/categories", getCategoriesByDepartment);
 
-// Mount products API
-app.use("/api", productsRoutes);
+// Get products by department & category
+router.get(
+  "/departments/:department/categories/:category/products",
+  getProductsByCategory
+);
 
-// Root route
-app.get("/", (req, res) => {
-  res.send("Welcome to Raino E-commerce Backend API");
-});
+// Get single product by ID
+router.get("/products/:id", getProductById);
 
-// Start server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+export default router;
