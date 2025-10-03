@@ -1,9 +1,22 @@
-import React from 'react'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import CatalogPage from "./pages/CatalogPage";
+import SingleProduct from "./Pages/SingleProduct";
+import CartPage from "./Pages/CartPage";
 
-const App = () => {
+function App() {
   return (
-    <div>App</div>
-  )
+    <Router>
+      <Routes>
+        {/* Catalog / Homepage */}
+        <Route path="/" element={<CatalogPage />} />
+
+        {/* Product Details Page */}
+        <Route path="/products/:id" element={<SingleProduct />} />
+
+        <Route path="/cart" element={<CartPage />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;

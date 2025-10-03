@@ -2,25 +2,33 @@ import express from "express";
 import {
   getDepartments,
   getCategoriesByDepartment,
-  getProductsByCategory,
+  getProducts,
   getProductById,
+  getBrands,
 } from "../controllers/productController.js";
 
 const router = express.Router();
 
-// Get all departments
+// Departments
 router.get("/departments", getDepartments);
 
-// Get categories by department
+// Categories by department
 router.get("/departments/:department/categories", getCategoriesByDepartment);
 
-// Get products by department & category
+// Brands by department (all categories in department)
+router.get("/departments/:department/brands", getBrands);
+
+// GET brands, optional query: ?department=Electronics&category=Mobiles
+router.get("/brands", getBrands);
+
+// Products by department & category (& optional brand via query param)
 router.get(
   "/departments/:department/categories/:category/products",
-  getProductsByCategory
+  getProducts
 );
 
-// Get single product by ID
-router.get("/products/:id", getProductById);
+
+// Single product by ID
+router.get("/:id", getProductById);
 
 export default router;
