@@ -12,6 +12,7 @@ import RatingSelect from "../components/RatingSelect";
 import PriceFilter from "../components/PriceFilter";
 import DiscountFilter from "../components/DiscountFilter";
 import ProductList from "../components/ProductList";
+import Layout from "../components/Layout";
 
 export default function CatalogPage() {
   const { data: departmentsData } = useDepartments();
@@ -24,7 +25,6 @@ export default function CatalogPage() {
 
   const { data: categoriesData } = useCategories(selectedDept);
   const { data: brandsData } = useBrands(selectedDept, selectedCat);
-
   const { data: productsData } = useProducts(
     selectedDept,
     selectedCat,
@@ -35,52 +35,71 @@ export default function CatalogPage() {
   );
 
   return (
-    <div>
-      <h1>Catalog</h1>
+    <Layout>
+      <div className="p-6">
+        <div className="flex gap-6">
+          {/* Left Sidebar Filters */}
+          <aside className="w-64 bg-white shadow-md rounded-xl p-4 space-y-6 sticky top-6 h-fit">
+            <div>
+              <DepartmentSelect
+                departments={departmentsData?.departments}
+                selectedDept={selectedDept}
+                onChange={(dept) => {
+                  setSelectedDept(dept);
+                  setSelectedCat("all");
+                  setSelectedBrand("all");
+                  setSelectedRating("all");
+                  setPriceRange({ min: "", max: "" });
+                  setDiscountRange({ min: "", max: "" });
+                }}
+              />
+            </div>
 
-      <DepartmentSelect
-        departments={departmentsData?.departments}
-        selectedDept={selectedDept}
-        onChange={(dept) => {
-          setSelectedDept(dept);
-          setSelectedCat("all");
-          setSelectedBrand("all");
-          setSelectedRating("all");
-          setPriceRange({ min: "", max: "" });
-          setDiscountRange({ min: "", max: "" });
-        }}
-      />
+            <div>
+              <CategorySelect
+                categories={categoriesData?.categories}
+                selectedCat={selectedCat}
+                onChange={(cat) => {
+                  setSelectedCat(cat);
+                  setSelectedBrand("all");
+                  setSelectedRating("all");
+                }}
+              />
+            </div>
 
-      <CategorySelect
-        categories={categoriesData?.categories}
-        selectedCat={selectedCat}
-        onChange={(cat) => {
-          setSelectedCat(cat);
-          setSelectedBrand("all");
-          setSelectedRating("all");
-        }}
-      />
+            <div>
+              <BrandSelect
+                brands={brandsData?.brands || []}
+                selectedBrand={selectedBrand}
+                onChange={setSelectedBrand}
+              />
+            </div>
 
-      <BrandSelect
-        brands={brandsData?.brands || []}
-        selectedBrand={selectedBrand}
-        onChange={setSelectedBrand}
-      />
+            <div>
+              <RatingSelect
+                selectedRating={selectedRating}
+                onChange={setSelectedRating}
+              />
+            </div>
 
-      <RatingSelect
-        selectedRating={selectedRating}
-        onChange={setSelectedRating}
-      />
+            <div>
+              <PriceFilter priceRange={priceRange} onChange={setPriceRange} />
+            </div>
 
-      <PriceFilter priceRange={priceRange} onChange={setPriceRange} />
+            <div>
+              <DiscountFilter
+                discountRange={discountRange}
+                onChange={setDiscountRange}
+              />
+            </div>
+          </aside>
 
-      <DiscountFilter
-        discountRange={discountRange}
-        onChange={setDiscountRange}
-      />
-
-      <h2>Products</h2>
-      <ProductList products={productsData?.products} loading={false} />
-    </div>
+          {/* Right Side Products */}
+          <main className="flex-1">
+            <ProductList products={productsData?.products} loading={false} />
+          </main>
+        </div>
+      </div>
+    </Layout>
   );
 }

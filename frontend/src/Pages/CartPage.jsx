@@ -1,17 +1,31 @@
 import React from "react";
 import { useCart } from "../context/CartContext";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const CartPage = () => {
-  const { cart, removeFromCart, clearCart, checkout, updateQuantity, loading } = useCart();
+  const navigate = useNavigate();
+  const { cart, removeFromCart, clearCart, checkout, updateQuantity, loading } =
+    useCart();
 
   const handleCheckout = async () => {
     try {
       const order = await checkout(); // calls CartContext.checkout
       toast.success("Checkout successful!");
-      console.log("Order details:", order); // optional: redirect to order page
+      console.log("Order details:", order);
+      setTimeout(() => navigate("/"), 1); // navigate after 1.5s
     } catch (err) {
       toast.error(err.message || "Checkout failed");
+    }
+  };
+
+  const handleClearCart = async () => {
+    try {
+      await clearCart();
+      toast.success("Cart cleared!");
+      setTimeout(() => navigate("/"), 1); // navigate after 1.5s
+    } catch (err) {
+      toast.error(err.message || "Failed to clear cart");
     }
   };
 
@@ -27,8 +41,6 @@ const CartPage = () => {
     }
   };
 
-  if (!cart.items || cart.items.length === 0)
-    return <p className="p-4">Your cart is empty.</p>;
 
   return (
     <div className="p-6">
@@ -88,7 +100,7 @@ const CartPage = () => {
       </button>
 
       <button
-        onClick={clearCart}
+        onClick={handleClearCart}
         className="mt-2 w-full bg-gray-500 hover:bg-gray-600 text-white py-2 rounded-md"
       >
         Clear Cart

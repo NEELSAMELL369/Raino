@@ -91,14 +91,8 @@ export const getBrands = (req, res) => {
 export const getProducts = (req, res) => {
   try {
     const { department, category } = req.params;
-    const {
-      brand,
-      rating, // number: 1, 2, 3, 4, 5
-      minPrice,
-      maxPrice,
-      minDiscount,
-      maxDiscount,
-    } = req.query;
+    const { brand, rating, minPrice, maxPrice, minDiscount, maxDiscount } =
+      req.query;
 
     let products = [];
 
@@ -164,6 +158,18 @@ export const getProducts = (req, res) => {
         if (maxDiscount && discount > Number(maxDiscount)) return false;
         return true;
       });
+    }
+
+    // 6️⃣ Search query
+    if (req.query.search && req.query.search.trim() !== "") {
+      const searchLower = req.query.search.toLowerCase();
+      products = products.filter(
+        (p) =>
+          p.name?.toLowerCase().includes(searchLower) ||
+          p.company?.toLowerCase().includes(searchLower) ||
+          p.category?.toLowerCase().includes(searchLower) ||
+          p.department?.toLowerCase().includes(searchLower)
+      );
     }
 
     res.json({ products });

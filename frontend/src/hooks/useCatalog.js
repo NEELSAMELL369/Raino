@@ -34,14 +34,15 @@ export const useBrands = (department = "all", category = "all") => {
   });
 };
 
-// ---------------- Products by Department, Category & optional Brand ----------------
+// ---------------- Products by Department, Category & optional Brand + Search ----------------
 export const useProducts = (
   department = "all",
   category = "all",
   brand = "all",
   rating = "all",
   priceRange = null,
-  discountRange = null
+  discountRange = null,
+  search = "" // <-- new search parameter
 ) => {
   return useQuery({
     queryKey: [
@@ -52,6 +53,7 @@ export const useProducts = (
       rating,
       priceRange,
       discountRange,
+      search, // include search in queryKey
     ],
     queryFn: () =>
       productsService(
@@ -60,12 +62,14 @@ export const useProducts = (
         brand,
         rating,
         priceRange,
-        discountRange
+        discountRange,
+        search // pass search to service
       ),
     enabled: true,
     keepPreviousData: false,
   });
 };
+
 
 // ---------------- Product by ID ----------------
 export const useProductById = (id) => {

@@ -28,7 +28,7 @@ export const categoriesService = async (department) => {
   }
 };
 
-// 3️⃣ Get Products by Department & Category with optional brand & rating filter
+
 // 3️⃣ Get Products by Department & Category with optional brand, rating, price & discount
 export const productsService = async (
   department,

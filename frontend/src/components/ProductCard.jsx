@@ -21,41 +21,47 @@ export default function ProductCard({ product }) {
     return stars;
   };
 
-  const handleClick = () => {
-    navigate(`/products/${id}`);
-  };
-
   return (
     <div
-      onClick={handleClick}
-      className="border rounded-lg shadow p-4 w-64 cursor-pointer hover:shadow-lg transition"
+      onClick={() => navigate(`/products/${id}`)}
+      className="border rounded-lg shadow p-4 cursor-pointer hover:shadow-lg transition bg-white flex flex-col w-full h-full"
     >
-      <img
-        src={images?.main}
-        alt={name}
-        className="w-full h-48 object-cover rounded-md"
-      />
+      {/* Image */}
+      <div className="w-full aspect-[4/3] overflow-hidden rounded-md">
+        <img
+          src={images?.main}
+          alt={name}
+          className="w-full h-full object-cover"
+        />
+      </div>
 
-      <h3 className="mt-2 font-semibold text-lg">{name}</h3>
+      {/* Name */}
+      <h3 className="mt-2 font-semibold text-lg line-clamp-2">{name}</h3>
 
+      {/* Rating */}
       <div className="flex items-center mt-1 text-sm">
         <span className="mr-2 font-medium text-gray-700">
           {rating?.average?.toFixed(1)}
         </span>
-        <div className="text-yellow-500">
+        <div className="text-yellow-500 flex">
           {rating && renderStars(rating.average)}
         </div>
         <span className="text-gray-500 ml-2">({rating?.count || 0})</span>
       </div>
 
-      <div className="mt-2">
-        <span className="text-lg font-bold">
+      {/* Price */}
+      <div className="mt-auto pt-2">
+        <span className="text-lg font-bold text-green-600">
           ₹{priceAfterDiscount?.toLocaleString()}
         </span>
-        <span className="text-gray-500 line-through ml-2">
-          ₹{price?.toLocaleString()}
-        </span>
-        <span className="text-green-600 ml-2">({discount}% off)</span>
+        {price && (
+          <span className="text-gray-500 line-through ml-2">
+            ₹{price?.toLocaleString()}
+          </span>
+        )}
+        {discount > 0 && (
+          <span className="text-red-500 ml-2">({discount}% off)</span>
+        )}
       </div>
     </div>
   );
